@@ -23,7 +23,6 @@ class TodoListViewController: SwipeTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.rowHeight = 80
 
     }
     
@@ -34,7 +33,7 @@ class TodoListViewController: SwipeTableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell = super.tableView(tableView, cellForRowAt: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         
         if let item = todoItems?[indexPath.row]{
@@ -88,7 +87,7 @@ class TodoListViewController: SwipeTableViewController {
                     
                     try self.realm.write{
                         let a = Item()
-                        a.title = textFiled.text ?? "New Item"
+                        a.title = textFiled.text?.count == 0 ? "New Item" : textFiled.text!
                         a.dataCreated = Date()
                         currentCategory.items.append(a)
                     }
@@ -102,7 +101,10 @@ class TodoListViewController: SwipeTableViewController {
             self.tableView.reloadData()
         }
         
+        let cancelButton = UIAlertAction(title: "cancel", style: .cancel)
+
         alert.addAction(action)
+        alert.addAction(cancelButton)
         present(alert, animated: true)
         
     }
@@ -137,6 +139,37 @@ class TodoListViewController: SwipeTableViewController {
                 }
             }
         }
+    
+    override func updateModelChange(at indexPath: IndexPath) {
+        var textFiled = UITextField()
+        
+        let alert = UIAlertController(title: "Еnter a new items name", message: "", preferredStyle: .alert)
+        
+        alert.addTextField{alertTextField in
+            alertTextField.placeholder = "new name item"
+            textFiled = alertTextField
+            
+            
+            let action = UIAlertAction(title: "Update", style: .default){ (action) in
+                
+                if let updateItem = self.todoItems?[indexPath.row]{
+                    try! self.realm.write{
+                        updateItem.title = textFiled.text?.count != 0 ? textFiled.text! : "New item"
+                    }
+
+                self.tableView.reloadData()
+                }
+            }
+            
+            let cancelButton = UIAlertAction(title: "cancel", style: .cancel)
+  
+            alert.addAction(action)
+            alert.addAction(cancelButton)
+            self.present(alert, animated: true)
+            
+        }
+    }
+
     
 }
 

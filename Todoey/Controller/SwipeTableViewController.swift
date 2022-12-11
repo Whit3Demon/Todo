@@ -23,6 +23,9 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
     func updateModel(at indexPath: IndexPath) {
            // Update our data model
        }
+    func updateModelChange(at indexPath: IndexPath){
+        
+    }
     
     
     
@@ -34,11 +37,13 @@ class SwipeTableViewController: UITableViewController, SwipeTableViewCellDelegat
             
         }
         
-       
+        let changeAction = SwipeAction(style: .default, title: "Change") { action, indexPath in
+            self.updateModelChange(at: indexPath)
+        }
                 // customize the action appearance
-        deleteAction.image = UIImage(named: "delete")
-       
-        return [deleteAction]
+        deleteAction.image = UIImage(systemName: "trash")
+        changeAction.image = UIImage(systemName: "pencil")
+        return [deleteAction, changeAction]
     }
     
     func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {

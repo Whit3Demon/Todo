@@ -19,7 +19,6 @@ class CategoryViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         load()
-        tableView.rowHeight = 80
         //swift_release(t)
     }
    
@@ -69,7 +68,7 @@ class CategoryViewController: SwipeTableViewController {
              
             
             let a = Category()
-            a.name = textFiled.text ?? "New Category"
+            a.name = textFiled.text?.count == 0 ? "New Category" : textFiled.text!
             self.swift_release(a)
             
             self.save(category: a)
@@ -78,7 +77,10 @@ class CategoryViewController: SwipeTableViewController {
             self.tableView.reloadData()
         }
         
+        let cancelButton = UIAlertAction(title: "cancel", style: .cancel)
+
         alert.addAction(action)
+        alert.addAction(cancelButton)
         present(alert, animated: true)
         
     }
@@ -100,6 +102,14 @@ class CategoryViewController: SwipeTableViewController {
         categoryArray = realm.objects(Category.self)
 
     }
+    
+//    func update(){
+//        let todoToUpdate = categoryArray[indexPath.row]
+//        try! realm.write {
+//            todoToUpdate.name = "InProgress"
+//        }
+    
+    
 
     override func updateModel(at indexPath: IndexPath) {
             if let categoryForDeletion = self.categoryArray?[indexPath.row] {
@@ -112,4 +122,37 @@ class CategoryViewController: SwipeTableViewController {
                 }
             }
         }
+    
+    
+    override func updateModelChange(at indexPath: IndexPath) {
+        var textFiled = UITextField()
+        
+        let alert = UIAlertController(title: "Еnter a new name", message: "", preferredStyle: .alert)
+        
+        alert.addTextField{alertTextField in
+            alertTextField.placeholder = "new name category"
+            textFiled = alertTextField
+            
+            
+            let action = UIAlertAction(title: "Update", style: .default){ (action) in
+                
+                if let updateCategory = self.categoryArray?[indexPath.row]{
+                    try! self.realm.write{
+                        updateCategory.name = textFiled.text?.count != 0 ? textFiled.text! : "New Category"
+                    }
+
+                self.tableView.reloadData()
+                }
+            }
+            let cancelButton = UIAlertAction(title: "cancel", style: .cancel)
+  
+            alert.addAction(action)
+            alert.addAction(cancelButton)
+            
+  
+           
+            self.present(alert, animated: true)
+            
+        }
+    }
 }
