@@ -18,11 +18,13 @@ class TodoListViewController: SwipeTableViewController {
             loadItems()
         }
     }
+    @IBOutlet weak var searchBarOutlet: UISearchBar!
     
     let realm = try! Realm()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBarOutlet.placeholder = "Search Items"
 
     }
     
@@ -69,17 +71,15 @@ class TodoListViewController: SwipeTableViewController {
         
         var textFiled = UITextField()
         
-        let alert = UIAlertController(title: "add new Todoey item", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
         
         alert.addTextField{alertTextField in
-            alertTextField.placeholder = "Create new item"
+            alertTextField.placeholder = "Enter here new item"
             textFiled = alertTextField
             
         }
         
-        let action = UIAlertAction(title: "Add item", style: .default){ (action) in
-            
-            print("Normalek")
+        let action = UIAlertAction(title: "Add", style: .default){ (action) in
             
             if let currentCategory = self.selectedCategory{
                 
@@ -93,7 +93,6 @@ class TodoListViewController: SwipeTableViewController {
                     }
                     
                 } catch{
-                    
                     print("error saving new item with \(error)")
                 }
             }
@@ -101,10 +100,11 @@ class TodoListViewController: SwipeTableViewController {
             self.tableView.reloadData()
         }
         
-        let cancelButton = UIAlertAction(title: "cancel", style: .cancel)
+        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive)
 
-        alert.addAction(action)
+        
         alert.addAction(cancelButton)
+        alert.addAction(action)
         present(alert, animated: true)
         
     }
@@ -143,10 +143,10 @@ class TodoListViewController: SwipeTableViewController {
     override func updateModelChange(at indexPath: IndexPath) {
         var textFiled = UITextField()
         
-        let alert = UIAlertController(title: "Еnter a new items name", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Еnter a new item name", message: "", preferredStyle: .alert)
         
         alert.addTextField{alertTextField in
-            alertTextField.placeholder = "new name item"
+            alertTextField.placeholder = "Enter here new name"
             textFiled = alertTextField
             
             
@@ -161,10 +161,10 @@ class TodoListViewController: SwipeTableViewController {
                 }
             }
             
-            let cancelButton = UIAlertAction(title: "cancel", style: .cancel)
+            let cancelButton = UIAlertAction(title: "Cancel", style: .destructive)
   
-            alert.addAction(action)
             alert.addAction(cancelButton)
+            alert.addAction(action)
             self.present(alert, animated: true)
             
         }

@@ -19,7 +19,6 @@ class CategoryViewController: SwipeTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         load()
-        //swift_release(t)
     }
    
     
@@ -42,6 +41,7 @@ class CategoryViewController: SwipeTableViewController {
         performSegue(withIdentifier: "goToItems", sender: self)
     }
     
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let destinationVC = segue.destination as! TodoListViewController
         
@@ -54,10 +54,10 @@ class CategoryViewController: SwipeTableViewController {
         
         var textFiled = UITextField()
         
-        let alert = UIAlertController(title: "add new category", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Аdd New Category", message: "", preferredStyle: .alert)
         
         alert.addTextField{alertTextField in
-            alertTextField.placeholder = "Create new category"
+            alertTextField.placeholder = "Еnter here new category"
             textFiled = alertTextField
             
         }
@@ -77,37 +77,15 @@ class CategoryViewController: SwipeTableViewController {
             self.tableView.reloadData()
         }
         
-        let cancelButton = UIAlertAction(title: "cancel", style: .cancel)
+        let cancelButton = UIAlertAction(title: "Cancel", style: .destructive)
 
-        alert.addAction(action)
+        
         alert.addAction(cancelButton)
+        alert.addAction(action)
         present(alert, animated: true)
         
     }
     
-    func save(category: Category){
-         
-        do{
-  
-            try realm.write{
-                realm.add(category)
-            }
-        } catch{
-            print("error saving \(error)")
-        }
-    }
-    
-    func load(){
-
-        categoryArray = realm.objects(Category.self)
-
-    }
-    
-//    func update(){
-//        let todoToUpdate = categoryArray[indexPath.row]
-//        try! realm.write {
-//            todoToUpdate.name = "InProgress"
-//        }
     
     
 
@@ -130,7 +108,7 @@ class CategoryViewController: SwipeTableViewController {
         let alert = UIAlertController(title: "Еnter a new name", message: "", preferredStyle: .alert)
         
         alert.addTextField{alertTextField in
-            alertTextField.placeholder = "new name category"
+            alertTextField.placeholder = "Еnter here new name"
             textFiled = alertTextField
             
             
@@ -144,15 +122,34 @@ class CategoryViewController: SwipeTableViewController {
                 self.tableView.reloadData()
                 }
             }
-            let cancelButton = UIAlertAction(title: "cancel", style: .cancel)
+            let cancelButton = UIAlertAction(title: "Cancel", style: .destructive)
   
-            alert.addAction(action)
             alert.addAction(cancelButton)
-            
+            alert.addAction(action)
+
   
            
             self.present(alert, animated: true)
             
         }
     }
+    
+    
+    func save(category: Category){
+             
+            do{
+      
+                try realm.write{
+                    realm.add(category)
+                }
+            } catch{
+                print("error saving \(error)")
+            }
+        }
+        
+        func load(){
+
+            categoryArray = realm.objects(Category.self)
+
+        }
 }
